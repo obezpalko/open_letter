@@ -2,7 +2,10 @@ use rand::{thread_rng, Rng};
 
 fn main() {
     let mut rng = thread_rng();
-    let first_part = [
+    const MAX_PHRASES: usize = 8;
+    let mut num_phrases: usize = rng.gen_range(3, MAX_PHRASES);
+    let mut used_indexes: [usize; MAX_PHRASES] = [99999; MAX_PHRASES];
+    let parts = [
         "Маменька, вышлите деньги.",
         "Папенька, вышлите деньги.",
         "Вышлите деньги.",
@@ -22,8 +25,6 @@ fn main() {
         "Вчера я видѣл вас во снѣ.",
         "Ваши глаза — пулеметы.",
         "Высылают.",
-    ];
-    let second_part = [
         "Прислуга грубит.",
         "Оштрафован за ношеніе ножа.",
         "Оштрафован за ношеніе вилки.",
@@ -41,8 +42,6 @@ fn main() {
         "Есть раненые.",
         "Слава Богу, только побили.",
         "Печи дымят.",
-    ];
-    let third_part = [
         "Ѣм, ѣм, а аппетита нѣт.",
         "Пьем ваше здоровье.",
         "А поллиція у нас вѣжливая.",
@@ -61,10 +60,19 @@ fn main() {
         "У наших сосѣдей есть граммофон.",
         "Всегда ваш…",
     ];
-    let index: (usize, usize, usize) = (
-        rng.gen_range(0, first_part.len()),
-        rng.gen_range(0, second_part.len()),
-        rng.gen_range(0, third_part.len()),
-    );
-    println!("{} {} {}", first_part[index.0], second_part[index.1], third_part[index.2]);
+
+    let total_phrases = parts.len();
+    loop {
+        let index: usize = loop {
+            let idx = rng.gen_range(0, total_phrases);
+            if !(used_indexes.contains(&idx)) {
+                used_indexes[num_phrases] = idx;
+                break idx
+            }
+        };
+        print!("{} ", parts[index]);
+        num_phrases -= 1;
+        if num_phrases <= 0 {break;}
+    }
+    println!("");
 }
